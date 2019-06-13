@@ -1,0 +1,19 @@
+{
+  "name": "hyperapp-todo",
+  "version": "1.0.0",
+  "description": "Todo SPA made with Hyperapp",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lpraz/hyperapp-todo.git"
+  },
+  "author": "lpraz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lpraz/hyperapp-todo/issues"
+  },
+  "homepage": "https://github.com/lpraz/hyperapp-todo#readme"
+}
