@@ -1,0 +1,64 @@
+body {
+    text-align: center;
+    font-family: sans-serif;
+}
+
+ul {
+    margin: auto;
+    padding: 0;
+    width: 90%;
+    text-align: left;
+}
+
+@media only screen and (min-width: 500px) {
+    ul {
+        width: 450px;
+    }
+}
+
+li {
+    margin: 1em 0;
+    padding: 1em;
+    border: 1px solid #000;
+    list-style: none;
+    vertical-align: middle;
+    background-color: #ffb;
+    border-radius: 10px;
+}
+
+div.buttons {
+    float: right;
+}
+
+div.buttons a {
+    display: inline-block;
+    height: 1.3em;
+    width: 1.3em;
+    text-align: center;
+    border: 1px solid #000;
+}
+
+a.complete {
+    background-color: #0a0;
+    color: #fff;
+}
+
+a.edit {
+    background-color: #fd0;
+    color: #000;
+}
+
+a.delete {
+    background-color: #d00;
+    color: #fff;
+}
+
+a.up {
+    background-color: #4bf;
+    color: #000
+}
+
+a.down {
+    background-color: #4bf;
+    color: #000
+}
