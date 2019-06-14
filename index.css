@@ -26,14 +26,9 @@ li {
     border-radius: 10px;
 }
 
-div.buttons {
-    float: right;
-}
-
-div.buttons a {
+a.button {
     display: inline-block;
-    height: 1.3em;
-    width: 1.3em;
+    padding: 2px;
     text-align: center;
     border: 1px solid #000;
 }
