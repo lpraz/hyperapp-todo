@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/lpraz/hyperapp-todo/issues"
   },
-  "homepage": "https://github.com/lpraz/hyperapp-todo#readme"
+  "homepage": "https://github.com/lpraz/hyperapp-todo#readme",
+  "devDependencies": {
+    "@babel/core": "^7.4.5"
+  }
 }
