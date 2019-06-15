@@ -25,34 +25,39 @@ li {
     background-color: #ffb;
 }
 
+li span.completed {
+    text-decoration: line-through; 
+}
+
 a.button {
     display: inline-block;
     padding: 2px;
     text-align: center;
     border: 1px solid #000;
+    cursor: pointer;
 }
 
-a.complete {
+a.button.complete {
     background-color: #0a0;
     color: #fff;
 }
 
-a.edit {
+a.button.edit {
     background-color: #fd0;
     color: #000;
 }
 
-a.delete {
+a.button.delete {
     background-color: #d00;
     color: #fff;
 }
 
-a.up {
+a.button.up {
     background-color: #4bf;
     color: #000
 }
 
-a.down {
+a.button.down {
     background-color: #4bf;
     color: #000
 }
