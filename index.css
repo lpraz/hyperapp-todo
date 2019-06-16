@@ -39,6 +39,8 @@ a.button {
     text-align: center;
     border: 1px solid #000;
     cursor: pointer;
+    background-color: #4bf;
+    color: #000
 }
 
 a.button.complete {
@@ -56,12 +58,15 @@ a.button.remove {
     color: #fff;
 }
 
-a.button.up {
-    background-color: #4bf;
-    color: #000
-}
-
-a.button.down {
-    background-color: #4bf;
-    color: #000
+.modal {
+    position: fixed;
+    top: 100px;
+    width: 300px;
+    border: 1px solid #000;
+    background-color: #ffb;
+    padding: 1em;
+    
+    /* Horizontally center */
+    left: 50%;
+    margin-left: -150px;
 }
