@@ -25,7 +25,11 @@ li {
     background-color: #ffb;
 }
 
-li span.completed {
+li.completed {
+    opacity: 0.5;
+}
+
+li.completed span {
     text-decoration: line-through; 
 }
 
@@ -47,7 +51,7 @@ a.button.edit {
     color: #000;
 }
 
-a.button.delete {
+a.button.remove {
     background-color: #d00;
     color: #fff;
 }
