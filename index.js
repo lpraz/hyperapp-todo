@@ -32,6 +32,22 @@ const remove = (state, index) => ({
     promptRemoveFor: null
 });
 
+const promptRemoveAll = state => ({
+    ...state,
+    promptRemoveFor: "all"
+});
+
+const cancelRemoveAll = state => ({
+    ...state,
+    promptRemoveFor: null
+});
+
+const removeAll = state => ({
+    ...state,
+    items: [],
+    promptRemoveFor: null
+});
+
 app({
     init: {
         items: [
@@ -57,22 +73,46 @@ app({
                     <li class={item.completed ? "completed" : ""}>
                         <span>{item.name}</span>
                         <br />
-                        <a class="button complete" onclick={[toggleCompleted, index]}>&#x2714;</a>
+                        <a class="button complete" onclick={[toggleCompleted, index]}>
+                            &#x2714;
+                        </a>
                         <a class="button edit">&#x270F;</a>
-                        <a class="button remove" onclick={[promptRemove, index]}>&#x2716;</a>
+                        <a class="button remove" onclick={[promptRemove, index]}>
+                            &#x2716;
+                        </a>
                         <a class="button">&#x2197;</a>
                         <a class="button">&#x2198;</a>
                     </li>
                 )}
             </ul>
             <p>
-                <a class="button remove">&#x2716; Remove All</a>
+                {state.items.length ? (
+                    <a
+                        class="button remove"
+                        onclick={promptRemoveAll}>
+                        &#x2716; Remove All
+                    </a>
+                ) : ""}
             </p>
-            {state.promptRemoveFor !== null ? (
+            {![null, "all"].includes(state.promptRemoveFor) ? (
                 <div class="modal">
-                    <p>Are you sure you want to remove the task "{state.items[state.promptRemoveFor].name}"?</p>
+                    <p>
+                        Are you sure you want to remove the task
+                        "{state.items[state.promptRemoveFor].name}"?
+                    </p>
                     <a class="button" onclick={cancelRemove}>Cancel</a>
-                    <a class="button remove" onclick={[remove, state.promptRemoveFor]}>&#x2716; Remove</a>
+                    <a
+                        class="button remove"
+                        onclick={[remove, state.promptRemoveFor]}>
+                        &#x2716; Remove
+                    </a>
+                </div>
+            ) : ""}
+            {state.promptRemoveFor === "all" ? (
+                <div class="modal">
+                    <p>Are you sure you want to remove all tasks from the list?</p>
+                    <a class="button" onclick={cancelRemoveAll}>Cancel</a>
+                    <a class="button remove" onclick={[removeAll]}>&#x2716; Remove All</a>
                 </div>
             ) : ""}
         </div>
