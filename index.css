@@ -39,21 +39,26 @@ a.button {
     text-align: center;
     border: 1px solid #000;
     cursor: pointer;
-    background-color: #4bf;
-    color: #000
+    background-color: #888;
+    color: #000;
 }
 
-a.button.complete {
+a.button.blue {
+    background-color: #4bf;
+    color: #000;
+}
+
+a.button.green {
     background-color: #0a0;
     color: #fff;
 }
 
-a.button.edit {
+a.button.yellow {
     background-color: #fd0;
     color: #000;
 }
 
-a.button.remove {
+a.button.red {
     background-color: #d00;
     color: #fff;
 }

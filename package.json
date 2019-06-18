@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/lpraz/hyperapp-todo#readme",
   "devDependencies": {
-    "@babel/core": "^7.4.5"
+    "@babel/core": "^7.4.5",
+    "cssnano": "^4.1.10"
   }
 }
