@@ -18,22 +18,6 @@ const toggleCompleted = (state, index) => ({
     ))
 });
 
-const promptRemove = (state, index) => ({
-    ...state,
-    removingItem: index
-});
-
-const cancelRemove = state => ({
-    ...state,
-    removingItem: null
-});
-
-const remove = (state, index) => ({
-    ...state,
-    items: state.items.filter((_, mapIndex) => (index !== mapIndex)),
-    removingItem: null
-});
-
 const promptAdd = state => ({
     ...state,
     addingItem: true
@@ -50,17 +34,63 @@ const cancelAdd = state => ({
     newItemName: ""
 });
 
-const add = (state, newItemName) => ({
+const add = state => ({
     ...state,
     items: [
         ...state.items,
         {
-            name: newItemName,
+            name: state.newItemName,
             completed: false
         }
     ],
     addingItem: false,
     newItemName: ""
+});
+
+const promptEdit = (state, index) => ({
+    ...state,
+    editingItem: index,
+    editingItemName: state.items[index].name
+});
+
+const setEditingItemName = (state, name) => ({
+    ...state,
+    editingItemName: name
+});
+
+const cancelEdit = state => ({
+    ...state,
+    editingItem: null
+});
+
+const edit = state => ({
+    ...state,
+    items: state.items.map((item, mapIndex) => (
+        state.editingItem === mapIndex ?
+        {
+            ...item,
+            name: state.editingItemName
+        } :
+        item
+    )),
+    editingItem: null,
+    editingItemName: ""
+});
+
+const promptRemove = (state, index) => ({
+    ...state,
+    removingItem: index
+});
+
+const cancelRemove = state => ({
+    ...state,
+    removingItem: null
+});
+
+const remove = state => ({
+    ...state,
+    items: state.items.filter((_, index) => (state.removingItem !== index)),
+    removingItem: null
 });
 
 const promptRemoveAll = state => ({
@@ -96,9 +126,11 @@ app({
                 completed: false
             }
         ],
-        removingItem: null,
         addingItem: false,
-        newItemName: null
+        newItemName: "",
+        editingItem: false,
+        editingItemName: "",
+        removingItem: null
     },
     view: state => (
         <div>
@@ -112,7 +144,11 @@ app({
                             onclick={[toggleCompleted, index]}>
                             &#x2714;
                         </a>
-                        <a class="button yellow">&#x270F;</a>
+                        <a
+                            class="button yellow"
+                            onclick={[promptEdit, index]}>
+                            &#x270F;
+                        </a>
                         <a class="button red" onclick={[promptRemove, index]}>
                             &#x2716;
                         </a>
@@ -144,13 +180,25 @@ app({
                         onInput={[setNewItemName, onInputValue]} />
                     <br />
                     <a class="button" onclick={cancelAdd}>&#x21A9; Cancel</a>
-                    <a
-                        class="button blue"
-                        onclick={[add, state.newItemName]}>
+                    <a class="button blue" onclick={add}>
                         + Add
                     </a>
                 </div>
-            ): ""}
+            ) : ""}
+            {state.editingItem ? (
+                <div class="modal">
+                    <p>Enter a new name for the task:</p>
+                    <input
+                        type="text"
+                        value={state.editingItemName}
+                        onInput={[setEditingItemName, onInputValue]} />
+                    <br />
+                    <a class="button" onclick={cancelEdit}>&#x21A9; Cancel</a>
+                    <a class="button yellow" onclick={[edit]}>
+                        &#x270F; Edit
+                    </a>
+                </div>
+            ) : ""}
             {![null, "all"].includes(state.removingItem) ? (
                 <div class="modal">
                     <p>
@@ -162,7 +210,7 @@ app({
                     </a>
                     <a
                         class="button red"
-                        onclick={[remove, state.removingItem]}>
+                        onclick={remove}>
                         &#x2716; Remove
                     </a>
                 </div>
