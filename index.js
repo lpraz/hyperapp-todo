@@ -3,6 +3,15 @@ import { h, app } from "hyperapp"
 // TODO: search/filter
 // TODO: autosave to local storage
 
+const swapArray = (array, x, y) =>
+    array.map((_, index) => {
+        switch (index) {
+            case x: return array[y];
+            case y: return array[x];
+            default: return array[index];
+        }
+    });
+
 const onInputValue = event =>
     event.target.value;
 
@@ -16,6 +25,16 @@ const toggleCompleted = (state, index) => ({
         } :
         item
     ))
+});
+
+const moveUp = (state, index) => ({
+    ...state,
+    items: swapArray(state.items, index, index - 1)
+});
+
+const moveDown = (state, index) => ({
+    ...state,
+    items: swapArray(state.items, index, index + 1)
 });
 
 const promptAdd = state => ({
@@ -139,36 +158,44 @@ app({
                     <li class={item.completed ? "completed" : ""}>
                         <span>{item.name}</span>
                         <br />
-                        <a
+                        <button
                             class="button green"
                             onclick={[toggleCompleted, index]}>
                             &#x2714;
-                        </a>
-                        <a
+                        </button>
+                        <button
                             class="button yellow"
                             onclick={[promptEdit, index]}>
                             &#x270F;
-                        </a>
-                        <a class="button red" onclick={[promptRemove, index]}>
+                        </button>
+                        <button 
+                            class="button red"
+                            onclick={[promptRemove, index]}>
                             &#x2716;
-                        </a>
-                        <a class="button">&#x2197;</a>
-                        <a class="button">&#x2198;</a>
+                        </button>
+                        <button
+                            disabled={index === 0}
+                            onclick={[moveUp, index]}>
+                            &#x2197;
+                        </button>
+                        <button
+                            disabled={index === state.items.length - 1}
+                            onclick={[moveDown, index]}>
+                            &#x2198;
+                        </button>
                     </li>
                 )}
             </ul>
             <p>
-                <a
-                    class="button blue"
-                    onclick={promptAdd}>
+                <button class="blue" onclick={promptAdd}>
                     + Add
-                </a>
+                </button>
                 {state.items.length ? (
-                    <a
-                        class="button red"
+                    <button
+                        class="red"
                         onclick={promptRemoveAll}>
                         &#x2716; Remove All
-                    </a>
+                    </button>
                 ) : ""}
             </p>
             {state.addingItem ? (
@@ -179,10 +206,10 @@ app({
                         value={state.newItemName}
                         onInput={[setNewItemName, onInputValue]} />
                     <br />
-                    <a class="button" onclick={cancelAdd}>&#x21A9; Cancel</a>
-                    <a class="button blue" onclick={add}>
+                    <button onclick={cancelAdd}>&#x21A9; Cancel</button>
+                    <button class="blue" onclick={add}>
                         + Add
-                    </a>
+                    </button>
                 </div>
             ) : ""}
             {state.editingItem ? (
@@ -193,10 +220,10 @@ app({
                         value={state.editingItemName}
                         onInput={[setEditingItemName, onInputValue]} />
                     <br />
-                    <a class="button" onclick={cancelEdit}>&#x21A9; Cancel</a>
-                    <a class="button yellow" onclick={[edit]}>
+                    <button onclick={cancelEdit}>&#x21A9; Cancel</button>
+                    <button class="yellow" onclick={[edit]}>
                         &#x270F; Edit
-                    </a>
+                    </button>
                 </div>
             ) : ""}
             {![null, "all"].includes(state.removingItem) ? (
@@ -205,14 +232,12 @@ app({
                         Are you sure you want to remove the task
                         "{state.items[state.removingItem].name}"?
                     </p>
-                    <a class="button" onclick={cancelRemove}>
+                    <button onclick={cancelRemove}>
                         &#x21A9; Cancel
-                    </a>
-                    <a
-                        class="button red"
-                        onclick={remove}>
+                    </button>
+                    <button class="red" onclick={remove}>
                         &#x2716; Remove
-                    </a>
+                    </button>
                 </div>
             ) : ""}
             {state.removingItem === "all" ? (
@@ -221,12 +246,12 @@ app({
                         Are you sure you want to remove all tasks from the
                         list?
                     </p>
-                    <a class="button" onclick={cancelRemoveAll}>
+                    <button onclick={cancelRemoveAll}>
                         &#x21A9; Cancel
-                    </a>
-                    <a class="button red" onclick={[removeAll]}>
+                    </button>
+                    <button class="red" onclick={[removeAll]}>
                         &#x2716; Remove All
-                    </a>
+                    </button>
                 </div>
             ) : ""}
         </div>

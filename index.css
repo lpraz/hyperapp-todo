@@ -33,32 +33,35 @@ li.completed span {
     text-decoration: line-through; 
 }
 
-a.button {
-    display: inline-block;
-    padding: 2px;
-    text-align: center;
+button {
+    padding: 0 2px;
+    margin: 2px;
+    font: inherit;
     border: 1px solid #000;
-    cursor: pointer;
     background-color: #888;
     color: #000;
 }
 
-a.button.blue {
+button[disabled] {
+    opacity: 0.5;
+}
+
+button.blue {
     background-color: #4bf;
     color: #000;
 }
 
-a.button.green {
+button.green {
     background-color: #0a0;
     color: #fff;
 }
 
-a.button.yellow {
+button.yellow {
     background-color: #fd0;
     color: #000;
 }
 
-a.button.red {
+button.red {
     background-color: #d00;
     color: #fff;
 }
