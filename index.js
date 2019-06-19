@@ -1,6 +1,5 @@
 import { h, app } from "hyperapp"
 
-// TODO: search/filter
 // TODO: autosave to local storage
 
 const swapArray = (array, x, y) =>
@@ -14,6 +13,11 @@ const swapArray = (array, x, y) =>
 
 const onInputValue = event =>
     event.target.value;
+
+const setFilter = (state, filter) => ({
+    ...state,
+    filter
+});
 
 const toggleCompleted = (state, index) => ({
     ...state,
@@ -149,41 +153,50 @@ app({
         newItemName: "",
         editingItem: false,
         editingItemName: "",
-        removingItem: null
+        removingItem: null,
+        filter: ""
     },
     view: state => (
         <div>
+            <label>Filter:</label>
+            &nbsp;
+            <input
+                type="text"
+                value={state.filter}
+                oninput={[setFilter, onInputValue]} />
             <ul>
                 {state.items.map((item, index) =>
-                    <li class={item.completed ? "completed" : ""}>
-                        <span>{item.name}</span>
-                        <br />
-                        <button
-                            class="button green"
-                            onclick={[toggleCompleted, index]}>
-                            &#x2714;
-                        </button>
-                        <button
-                            class="button yellow"
-                            onclick={[promptEdit, index]}>
-                            &#x270F;
-                        </button>
-                        <button 
-                            class="button red"
-                            onclick={[promptRemove, index]}>
-                            &#x2716;
-                        </button>
-                        <button
-                            disabled={index === 0}
-                            onclick={[moveUp, index]}>
-                            &#x2197;
-                        </button>
-                        <button
-                            disabled={index === state.items.length - 1}
-                            onclick={[moveDown, index]}>
-                            &#x2198;
-                        </button>
-                    </li>
+                    item.name.includes(state.filter) ? (
+                        <li class={item.completed ? "completed" : ""}>
+                            <span>{item.name}</span>
+                            <br />
+                            <button
+                                class="green"
+                                onclick={[toggleCompleted, index]}>
+                                &#x2714;
+                            </button>
+                            <button
+                                class="yellow"
+                                onclick={[promptEdit, index]}>
+                                &#x270F;
+                            </button>
+                            <button 
+                                class="red"
+                                onclick={[promptRemove, index]}>
+                                &#x2716;
+                            </button>
+                            <button
+                                disabled={index === 0}
+                                onclick={[moveUp, index]}>
+                                &#x2197;
+                            </button>
+                            <button
+                                disabled={index === state.items.length - 1}
+                                onclick={[moveDown, index]}>
+                                &#x2198;
+                            </button>
+                        </li>
+                    ) : ""
                 )}
             </ul>
             <p>
