@@ -1,7 +1,5 @@
 import { h, app } from "hyperapp"
 
-// TODO: autosave to local storage
-
 const swapArray = (array, x, y) =>
     array.map((_, index) => {
         switch (index) {
@@ -14,12 +12,67 @@ const swapArray = (array, x, y) =>
 const onInputValue = event =>
     event.target.value;
 
+// Ordinarily these wouldn't be re-implemented, but for the sake of learning...
+const localStorageKey = "hyperapp-todo_items";
+
+const readFromLocalStorageEffect = (dispatch, props) => {
+    var value = localStorage.getItem(props.key);
+    dispatch(props.action, value);
+};
+
+const readFromLocalStorage = props => [readFromLocalStorageEffect, props];
+
+const writeToLocalStorageEffect = (dispatch, props) => {
+    localStorage.setItem(props.key, props.value);
+};
+
+const writeToLocalStorage = props => [writeToLocalStorageEffect, props];
+
+const withSave = (state, newState) => [
+    newState,
+    writeToLocalStorage({
+        key: localStorageKey,
+        value: JSON.stringify(newState.items)
+    })
+];
+
+const initState = () => [
+    {
+        addingItem: false,
+        newItemName: "",
+        editingItem: false,
+        editingItemName: "",
+        removingItem: false,
+        filter: ""
+    },
+    readFromLocalStorage({
+        key: localStorageKey,
+        action: (state, value) => ({
+            ...state,
+            items: JSON.parse(value) !== null ? JSON.parse(value) : [
+                {
+                    name: "Learn Hyperapp",
+                    completed: false
+                },
+                {
+                    name: "Conquer the world",
+                    completed: false
+                },
+                {
+                    name: "Add some more tasks!",
+                    completed: false
+                }
+            ]
+        })
+    })
+];
+
 const setFilter = (state, filter) => ({
     ...state,
     filter
 });
 
-const toggleCompleted = (state, index) => ({
+const toggleCompleted = (state, index) => withSave(state, {
     ...state,
     items: state.items.map((item, mapIndex) => (
         index === mapIndex ?
@@ -31,12 +84,12 @@ const toggleCompleted = (state, index) => ({
     ))
 });
 
-const moveUp = (state, index) => ({
+const moveUp = (state, index) => withSave(state, {
     ...state,
     items: swapArray(state.items, index, index - 1)
 });
 
-const moveDown = (state, index) => ({
+const moveDown = (state, index) => withSave(state, {
     ...state,
     items: swapArray(state.items, index, index + 1)
 });
@@ -57,7 +110,7 @@ const cancelAdd = state => ({
     newItemName: ""
 });
 
-const add = state => ({
+const add = state => withSave(state, {
     ...state,
     items: [
         ...state.items,
@@ -83,10 +136,10 @@ const setEditingItemName = (state, name) => ({
 
 const cancelEdit = state => ({
     ...state,
-    editingItem: null
+    editingItem: false
 });
 
-const edit = state => ({
+const edit = state => withSave(state, {
     ...state,
     items: state.items.map((item, mapIndex) => (
         state.editingItem === mapIndex ?
@@ -96,7 +149,7 @@ const edit = state => ({
         } :
         item
     )),
-    editingItem: null,
+    editingItem: false,
     editingItemName: ""
 });
 
@@ -107,13 +160,13 @@ const promptRemove = (state, index) => ({
 
 const cancelRemove = state => ({
     ...state,
-    removingItem: null
+    removingItem: false
 });
 
-const remove = state => ({
+const remove = state => withSave(state, {
     ...state,
     items: state.items.filter((_, index) => (state.removingItem !== index)),
-    removingItem: null
+    removingItem: false
 });
 
 const promptRemoveAll = state => ({
@@ -123,39 +176,17 @@ const promptRemoveAll = state => ({
 
 const cancelRemoveAll = state => ({
     ...state,
-    removingItem: null
+    removingItem: false
 });
 
-const removeAll = state => ({
+const removeAll = state => withSave(state, {
     ...state,
     items: [],
-    removingItem: null
+    removingItem: false
 });
 
 app({
-    init: {
-        items: [
-            {
-                name: "Learn Hyperapp",
-                completed: false
-            },
-            {
-                name: "Learn Vue",
-                completed: false
-            },
-            {
-                name: "This is a really long task meant to show off what " +
-                    "having multiple lines looks like",
-                completed: false
-            }
-        ],
-        addingItem: false,
-        newItemName: "",
-        editingItem: false,
-        editingItemName: "",
-        removingItem: null,
-        filter: ""
-    },
+    init: initState(),
     view: state => (
         <div>
             <label>Filter:</label>
@@ -166,7 +197,7 @@ app({
                 oninput={[setFilter, onInputValue]} />
             <ul>
                 {state.items.map((item, index) =>
-                    item.name.includes(state.filter) ? (
+                    item.name.toLowerCase().includes(state.filter.toLowerCase()) ? (
                         <li class={item.completed ? "completed" : ""}>
                             <span>{item.name}</span>
                             <br />
@@ -211,7 +242,7 @@ app({
                     </button>
                 ) : ""}
             </p>
-            {state.addingItem ? (
+            {state.addingItem !== false ? (
                 <div class="modal">
                     <p>Enter a name for the task:</p>
                     <input
@@ -225,7 +256,7 @@ app({
                     </button>
                 </div>
             ) : ""}
-            {state.editingItem ? (
+            {state.editingItem !== false ? (
                 <div class="modal">
                     <p>Enter a new name for the task:</p>
                     <input
@@ -239,7 +270,7 @@ app({
                     </button>
                 </div>
             ) : ""}
-            {![null, "all"].includes(state.removingItem) ? (
+            {![false, "all"].includes(state.removingItem) ? (
                 <div class="modal">
                     <p>
                         Are you sure you want to remove the task
