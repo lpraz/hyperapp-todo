@@ -7,4 +7,12 @@ A working copy of this web app is hosted
 [on Github Pages](https://lpraz.github.io/hyperapp-todo).
 
 ## Building
-To run locally, use Parcel: `parcel index.html`.
+This web app is built using Parcel. To run locally:
+```
+parcel index.html
+```
+
+To rebuild for Github Pages:
+```
+parcel build -d docs --public-url "./" --no-source-maps index.html
+```
